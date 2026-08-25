@@ -1,0 +1,56 @@
+# Continuous integration for guilt-poet.
+# Runs the pytest suite on every supported Python (3.10+) for pushes and PRs,
+# then smoke-tests that the `python -m guilt_poet` entry point still boots.
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: pytest (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Quoted so YAML does not collapse "3.10" into 3.1.
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          # Install the package itself when packaging metadata is present
+          # (pyproject.toml / setup.py / setup.cfg). The PYTHONPATH fallback
+          # in the test steps keeps the src/ layout importable either way.
+          if [ -f pyproject.toml ] || [ -f setup.py ] || [ -f setup.cfg ]; then
+            python -m guilt_poet --version > /dev/null 2>&1 || true
+            python -m pip install -e .
+          fi
+
+      - name: Run test suite
+        run: pytest -v
+        env:
+          PYTHONPATH: src
+
+      - name: Smoke test CLI entry point
+        run: python -m guilt_poet --help
+        env:
+          PYTHONPATH: src
