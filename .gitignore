@@ -1,0 +1,75 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+build/
+dist/
+sdist/
+wheels/
+.eggs/
+*.egg
+*.egg-info/
+*.whl
+*.tar.gz
+pip-log.txt
+pip-wheel-log.txt
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.virtualenv/
+.python-version
+
+# Test, coverage, and tool caches
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+.ruff_cache/
+.tox/
+.nox/
+.cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+junit.xml
+htmlcov/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.local.json
+config.local.json
+logguilt.local.json
+.logguilt.json
+.secrets/
+*.pem
+*.key
+
+# Generated logs, reports, and runtime artifacts
+*.log
+!/examples/sample.log
+logs/
+reports/
+output/
+artifacts/
+tmp/
+.logguilt/
+*.sqlite3
+*.db
+
+# Editors and OS files
+.idea/
+.vscode/
+.ipynb_checkpoints/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
